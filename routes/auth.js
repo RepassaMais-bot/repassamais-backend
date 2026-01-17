@@ -1,38 +1,39 @@
 const express = require("express");
 const router = express.Router();
+const User = require("../models/User");
 
-// Cadastro
-router.post("/register", (req, res) => {
-  const data = req.body;
-
-  res.json({
-    success: true,
-    message: "Cadastro recebido",
-    data
-  });
-});
-
-// Login
-router.post("/login", (req, res) => {
+// cadastro
+router.post("/register", (req,res)=>{
   const { email, senha } = req.body;
 
-  if (!email || !senha) {
-    return res.status(400).json({
-      success: false,
-      message: "Email e senha obrigatórios"
+  if(!email || !senha){
+    return res.status(400).json({ success:false });
+  }
+
+  User.createUser(
+    { email, senha, role:"user" },
+    (err)=>{
+      if(err){
+        return res.json({ success:false, message:"Usuário já existe" });
+      }
+      res.json({ success:true });
+    }
+  );
+});
+
+// login real
+router.post("/login",(req,res)=>{
+  const { email, senha } = req.body;
+
+  User.findUser(email,(err,user)=>{
+    if(!user || user.senha !== senha){
+      return res.json({ success:false });
+    }
+
+    res.json({
+      success:true,
+      user
     });
-  }
-
-  let role = "user";
-
-  if (email === process.env.ADMIN_EMAIL && senha === process.env.ADMIN_PASSWORD) {
-    role = "admin";
-  }
-
-  res.json({
-    success: true,
-    token: "TOKEN_" + email,
-    role
   });
 });
 
