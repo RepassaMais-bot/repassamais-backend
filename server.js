@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const authRoutes = require("./routes/auth");
 const eventosRoutes = require("./routes/eventos");
 const veiculosRoutes = require("./routes/veiculos");
+const ofertasRoutes = require("./routes/ofertas"); // 🔥 ADICIONADO
 
 const app = express();
 
@@ -27,7 +28,8 @@ app.get("/debug", (req, res) => {
   res.json({
     authRoutes: typeof authRoutes,
     eventosRoutes: typeof eventosRoutes,
-    veiculosRoutes: typeof veiculosRoutes
+    veiculosRoutes: typeof veiculosRoutes,
+    ofertasRoutes: typeof ofertasRoutes
   });
 });
 
@@ -82,6 +84,7 @@ app.get("/me", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/eventos", eventosRoutes);
 app.use("/veiculos", veiculosRoutes);
+app.use("/ofertas", ofertasRoutes); // 🔥 ADICIONADO
 
 // ===== START =====
 const PORT = process.env.PORT || 3000;
