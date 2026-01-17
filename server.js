@@ -2,6 +2,11 @@
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
+// rotas
+const authRoutes = require("./routes/auth");
+const eventosRoutes = require("./routes/eventos");
+const veiculosRoutes = require("./routes/veiculos");
+
 const app = express();
 
 app.use(cors());
@@ -17,7 +22,7 @@ app.get("/", (req, res) => {
   res.send("API RepassaMais rodando");
 });
 
-// ===== LOGIN =====
+// ===== LOGIN DIRETO (GLOBAL) =====
 app.post("/login", (req, res) => {
   const { email, senha } = req.body;
 
@@ -63,6 +68,11 @@ app.get("/me", (req, res) => {
     res.status(401).json({ error: "Token inválido" });
   }
 });
+
+// ===== ROTAS MODULARES =====
+app.use("/auth", authRoutes);
+app.use("/eventos", eventosRoutes);
+app.use("/veiculos", veiculosRoutes);
 
 // ===== START =====
 const PORT = process.env.PORT || 3000;
