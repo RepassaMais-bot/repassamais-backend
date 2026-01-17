@@ -22,6 +22,15 @@ app.get("/", (req, res) => {
   res.send("API RepassaMais rodando");
 });
 
+// ===== DEBUG ROTAS =====
+app.get("/debug", (req, res) => {
+  res.json({
+    authRoutes: typeof authRoutes,
+    eventosRoutes: typeof eventosRoutes,
+    veiculosRoutes: typeof veiculosRoutes
+  });
+});
+
 // ===== LOGIN DIRETO (GLOBAL) =====
 app.post("/login", (req, res) => {
   const { email, senha } = req.body;
