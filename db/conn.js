@@ -5,9 +5,9 @@ const dbPath = path.join(__dirname, "database.sqlite");
 
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
-    console.error("Erro ao conectar banco:", err.message);
+    console.error("Erro ao abrir banco:", err.message);
   } else {
-    console.log("Banco SQLite conectado");
+    console.log("Banco SQLite conectado com sucesso");
   }
 });
 

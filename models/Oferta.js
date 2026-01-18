@@ -1,54 +1,18 @@
 const db = require("../db/conn");
 
+db.run(`
+CREATE TABLE IF NOT EXISTS ofertas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_email TEXT,
+  veiculo_id INTEGER,
+  valor REAL,
+  status TEXT
+)
+`);
+
 module.exports = {
-
-  criar:(o)=>{
-    return new Promise((resolve,reject)=>{
-      db.run(`
-        INSERT INTO ofertas (user_id, veiculo_id, valor, status)
-        VALUES (?,?,?,?)
-      `,
-      [o.user_id, o.veiculo_id, o.valor, "aguardando"],
-      function(err){
-        if(err) reject(err);
-        else resolve(this.lastID);
-      });
-    });
-  },
-
-  listarPorUsuario:(user_id)=>{
-    return new Promise((resolve,reject)=>{
-      db.all(
-        "SELECT * FROM ofertas WHERE user_id=? ORDER BY created_at DESC",
-        [user_id],
-        (err,rows)=>{
-          if(err) reject(err);
-          else resolve(rows);
-        }
-      );
-    });
-  },
-
-  listarTodas:()=>{
-    return new Promise((resolve,reject)=>{
-      db.all("SELECT * FROM ofertas ORDER BY created_at DESC",(err,rows)=>{
-        if(err) reject(err);
-        else resolve(rows);
-      });
-    });
-  },
-
-  atualizarStatus:(id,status)=>{
-    return new Promise((resolve,reject)=>{
-      db.run(
-        "UPDATE ofertas SET status=? WHERE id=?",
-        [status,id],
-        err=>{
-          if(err) reject(err);
-          else resolve(true);
-        }
-      );
-    });
+  create(oferta, cb) {
+    const sql = `INSERT INTO ofertas (user_email, veiculo_id, valor, status) VALUES (?,?,?,?)`;
+    db.run(sql, [oferta.user_email, oferta.veiculo_id, oferta.valor, oferta.status], cb);
   }
-
 };

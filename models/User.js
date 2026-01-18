@@ -1,46 +1,22 @@
 const db = require("../db/conn");
 
-// cria tabela automaticamente
 db.run(`
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome TEXT,
   email TEXT UNIQUE,
   senha TEXT,
-  role TEXT,
-  creditos INTEGER DEFAULT 0,
-  status TEXT DEFAULT 'pendente',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  role TEXT
 )
 `);
 
-function createUser(data, callback) {
-  const { email, senha, role } = data;
-
-  db.run(
-    `INSERT INTO users (email, senha, role) VALUES (?, ?, ?)`,
-    [email, senha, role],
-    callback
-  );
-}
-
-function findUser(email, callback) {
-  db.get(
-    `SELECT * FROM users WHERE email = ?`,
-    [email],
-    callback
-  );
-}
-
-function updateCreditos(id, creditos, callback) {
-  db.run(
-    `UPDATE users SET creditos = ? WHERE id = ?`,
-    [creditos, id],
-    callback
-  );
-}
-
 module.exports = {
-  createUser,
-  findUser,
-  updateCreditos
+  create(user, cb) {
+    const sql = `INSERT INTO users (nome,email,senha,role) VALUES (?,?,?,?)`;
+    db.run(sql, [user.nome, user.email, user.senha, user.role], cb);
+  },
+
+  findByEmail(email, cb) {
+    db.get("SELECT * FROM users WHERE email = ?", [email], cb);
+  }
 };
